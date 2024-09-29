@@ -13,13 +13,13 @@ public class StateMachine : MonoBehaviour
     }
 
     public State CurrentState = State.idle;
+    Vector3 lastPosition;
 
     void Start()
     {
-        
+        lastPosition = transform.position;
     }
 
-    
     void Update()
     {
         switch (CurrentState)
@@ -27,29 +27,37 @@ public class StateMachine : MonoBehaviour
             case State.idle: Idle(); break;
             case State.walking: Walking(); break;
             case State.swimming: Swimming(); break;
-            case State.climbing: Climbimg(); break;
+            case State.climbing: Climbing(); break;
             default: break;
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
-        if(other.name == "WaterTrigger")
+        if (other.name == "WaterTrigger")
         {
-            Swimming();
+            Debug.Log("Swimming");
+            CurrentState = State.swimming; 
+        }
+        else if (other.name == "MountainTrigger")
+        {
+            Debug.Log("Climbing");
+            CurrentState = State.climbing;
         }
     }
+
     void OnTriggerExit(Collider other)
     {
-        
+        Debug.Log("Walking");
+        CurrentState = State.walking; 
     }
 
     void Swimming()
     {
         Debug.Log("I am Swimming");
     }
-    void Climbimg()
+
+    void Climbing()
     {
         Debug.Log("I am Climbing");
     }
@@ -57,11 +65,25 @@ public class StateMachine : MonoBehaviour
     void Idle()
     {
         Debug.Log("I am idle");
+        if (lastPosition != transform.position)
+        {
+            Debug.Log("Moving");
+            CurrentState = State.walking; 
+        }
+
+        lastPosition = transform.position;
     }
 
-    void Walking () 
+    void Walking()
     {
         Debug.Log("I am Walking");
-    }
 
+        if (lastPosition == transform.position)
+        {
+            Debug.Log("Stopped");
+            CurrentState = State.idle; 
+        }
+
+        lastPosition = transform.position;
+    }
 }
