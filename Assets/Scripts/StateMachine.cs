@@ -4,16 +4,32 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public enum State
+    {
+        idle,
+        walking,
+        swimming,
+        climbing
+    }
+
+    public State CurrentState = State.idle;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        Idle();
+        switch (CurrentState)
+        {
+            case State.idle: Idle(); break;
+            case State.walking: Walking(); break;
+            case State.swimming: Swimming(); break;
+            case State.climbing: Climbimg(); break;
+            default: break;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -24,6 +40,11 @@ public class StateMachine : MonoBehaviour
             Swimming();
         }
     }
+    void OnTriggerExit(Collider other)
+    {
+        
+    }
+
     void Swimming()
     {
         Debug.Log("I am Swimming");
@@ -36,6 +57,11 @@ public class StateMachine : MonoBehaviour
     void Idle()
     {
         Debug.Log("I am idle");
+    }
+
+    void Walking () 
+    {
+        Debug.Log("I am Walking");
     }
 
 }
